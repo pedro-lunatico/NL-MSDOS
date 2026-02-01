@@ -1,0 +1,23 @@
+gm82_version=5
+gameid=594005366
+
+info_author=
+info_version=100
+info_information=
+
+exe_company=Lunatic Games Corp.
+exe_product=Nordion Lands: The Second Mole Dimension Of Science
+exe_copyright=©Nordion Team, Lunatic Games©
+exe_description=Num mundo de ciencia sem morais, explore e tente salvar o mundo de usinas letais
+exe_version=0.13.15.5
+
+has_backgrounds=1
+has_datafiles=1
+has_fonts=1
+has_objects=1
+has_paths=1
+has_scripts=1
+has_sounds=1
+has_sprites=1
+has_timelines=1
+has_triggers=1
