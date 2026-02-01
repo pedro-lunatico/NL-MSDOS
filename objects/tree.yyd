@@ -1,0 +1,235 @@
++Lunatic Corp
+	|Hatsune estatua
+	|Hatsune_Miku_OBJ
+	+Miku Dialogue
+		|Botao1Miku
+		|Botao2Miku
+		|diag_MIKU01
+	+MIKUBYL
+		|obj_btn_up
+		|obj_btn_down
+		|obj_btn_space
+		|controlador_usina_mikubyl
+		|powerup01_Mikubyl
++Neon Castelia City
+	|Predio_Castelia_City
+	|PredioCasteliaCity_x0_7
+	|Mark_OBJ
+	|Leaf_Enemy
+	|predioCasteliaCity_x0_5
+	|Nami_Burglar
+	|ENGAGE_CENTER
+	+apt Lyn
+		|Botao1Lyn
+		|Botao2Lyn
+		|botao3Lyn
+		|diag_Lyn01
+	+Mark Dialogue
+		|Botao1Mark
+		|Botao2Mark
+		|Botao3Mark
+		|diag_Mark01
+	+aviao
+		|obj_mode7_ground
+		|aviao_player
+		|EVA_EMBLEM_Colizao
+	|Sakura_tree
++Fergus Industries
+	|Fergus_OBJ
+	+Fergus Dialogue
+		|Botao1Fergus
+		|Botao2Fergus
+		|Botao3Fergus
+		|diag_Fergus01
+	+Rosa Dialogue
+		|Botao1Rosa
+		|Botao2Rosa
+		|Botao3Rosa
+		|diag_Rosa01
+		|Rosa _battle
+	+Osaka Dialogue
+		|diag_Osaka01
+	|Osaka
+	|Rosa_Jumpscare
+	|gatilho_Nami_gemido
+	|Dawn
++Sytems
+	+Player
+		|Player_Horse
+		|Player_Wonder_Boy
+		|player
+		|player_RE1
+		|player_RE2
+		|player_RE3
+	|level_control
+	|inventory_controller
+	|Relationship_control
+	|RPG_Dialogue
+	|colizao
+	+Bosses
+		|Boss_EVA_EMBLEM
+		|obj_particle
+		|hit_box_EVA_EMBLEM
+	|Teleport
+	|Click
+	|Nami
+	+PC
+		|Storage
+		|SairdoPC(Fergus)
+		+Miku Net
+			|MikuNet_shortcut
+			|Camera_Cursor
+			|MikuNet_shortcut2
+			|Sair_MIKUNET
+			|para_alistar
+			|ENGAGESITE_Link
+			+Noobfield.NL
+				|Noobfield_BlueDye
+				|Labs_Button
+				|BuyNOW
+		|pc
+		|lickbox
+		|minefood_POS
+		|EXIT_MINEFOOD_POS
+		|emulador
+	+MENU
+		|RePlay
+		+tutorial
+			|TP_Tutorial2
+			|TP_Tutorial1
+			|TP_Tutorial3
+			|TP_Tutorial4
+			|Sair_Tutorial
+		+main menu
+			|main_menu_controller
+			|load_game_button
+			|window_button
+			|new_game_button
+			|settings_button
+			|play_button
+			|resolution_button
+			|shampoo_ui
+			|back_Menu
+			|credits_button
+	+Teleports
+		+FERGUS INDUSTRIS
+			|TP_ROSA_OFFICE
+			|TP_FERGUS_INDUSTRIES
+			|TP_FERGUS_INDUSTRIES_RE2
+			|CB_FERGUS
+			|TP_FERGUS
+			|TP_Fergus_corredor1
+			|TP_Fergus_corredor1_RE3
+			|Fergus_Factory_setor
+			|TP_Fergus_interior_RE2
+			|TP_Fergus_corredor2
+			|TP_Fergus_corredor2_RE3
+			|TP_Fergus_corredor3
+			|TP_Fergus_Chemistry_room
+			|TP_Fergus_Basquete
+		+LUNATIC CORP
+			|TP_LUNATIC_CORP
+			|EXIT_MIKUBYL
+			|TP_MIKUBYL
+		+NEON CASTELIA CITY
+			|TP_NEON_CASTELIA_CITY
+			|TP_APT_LYN
+			|TP_ENGAGE_CENTER
+			|EXIT_Player_APTO
+			|TP_EVA_Emblem_Hangar
+		+NOOBFIELD
+			|TP_NOOBFIELD_EXTERIOR
+			|TP_NOOBFIELD_INTERIOR
+			|DOOR_NOOBFIELD_EXTERIOR
+		+MOJANG PROCESORS
+			|TP_Neon_Castelia_City_02
+		+minefood
+			|TP_MINEFOOD_EXTERIOR
+			|TP_MINEFOOD_INTERIOR
+			|DOOR_MINEFOOD_EXTERIOR
+		|TP_Magvel
+		+Magvel
+			|TP_MAGVEL2
+			|TP_MAGVEL1
+		+TELEPORTO JOLYNE KUJO
+			|NAMI_stewardess_OBJ1
+			|NAMI_stewardess_OBJ2
+			|NAMI_stewardess_OBJ3
+			|Concorde_INFEITE
+	+APTO SYSTEM
+		+lyn apto
+			|trocar_room
+			|globo_terrestre_lyn_apto
+			|foto_da_antiga_engage
+			|foto_da_nova_familia
+			|foto_da_antiga_familia
+			|foto_da_fornatura
+			|carrinho_de_briquedo_Lyn_apto
+			|boneco_eva_emblem
+		|obj_build_controller
+		|Armario_OBJ
+		|Tv_OBJ
+		|Sofa_OBJ
+		|Blazing_Blade_Pedestal
+		+TV
+			|Button_AV
+			|Button_HDMI
+			|Button_TV
+			|wiiU_meu_control
+	+chemistry
+		|crafting_table
+		|carbono
+		|Chemistry_Manual_obj
+	|Dew_relationship
+	|dayNight_controller
++Noobfield
+	|Colton
+	+Colton Dialogue
+		|Butao1Colton
+		|Butao2Colton
+		|diag_Colton01
+	|MusicNoobField
++Mojang Processors
+	|Mojang_Studios
++Other
+	|Cavalo
+	+Nick
+		|Nick_Fir_OBJ
+		|Nick_RVL_OBJ
+	|obj_bullet
+	+FPS
+		|obj_wall2_hor
+		|obj_wall1_hor
+		|FPS_Floor
+		|FPS_FLOOR_TETO
+		|FPS_PLAYER
+		|letter_01
+		|letter_02
+	+plane
+		|plane_player
+		|plane_floor
++Nami Jobs
+	|Job_Program
+	|Job_Clone
+	|Job_Eat
+	|Job_Sleep
++magvel
+	|Magvel_music
+	|Nami_Guerreira
+	|obj_Oca
+	|deLorca_Door
+	+Familia de Lorca dialogue
+		|diag_deLorca01
+	+monte silesia
+		|Cavalier_OBJ
+		|Cavalier_OBJ2
+		|ponto_de_corrida
+		|chegada
+		|Ghost_Nimbus_Boss
+		|Ghost_Nimbus_Dialogue
+		|Kent_Dialogue
+		|Heath_Dialogue
+		|Speed_Radar_Silesia
+	|Pump_Jack
+|furniture
+|furcontroller_chest

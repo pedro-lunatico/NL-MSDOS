@@ -1,0 +1,8 @@
+extension=.mid
+exists=1
+source=G:\gamemaker\Nordion Lands The MSDos\Nordion Project 13139.gmx\\\sound\audio\NoobField Labs Theme.mid
+kind=1
+effects=5
+volume=0.8
+pan=0
+preload=1

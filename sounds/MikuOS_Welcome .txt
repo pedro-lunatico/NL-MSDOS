@@ -1,0 +1,8 @@
+extension=.mid
+exists=1
+source=G:\gamemaker\Nordion Lands The MSDos\Nordion Project 13139.gmx\\\sound\audio\MikuOS_Welcome .mid
+kind=1
+effects=8
+volume=0.89
+pan=-1
+preload=1

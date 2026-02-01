@@ -1,0 +1,72 @@
++Game System
+	|Title_Screen
+	|GameOver
+	|Testing
+	+Tutorial
+		|Tutorial_1
+		|Tutorial_2
+		|Tutorial_3
+		|Tutorial_4
+	|botton_room
+	|setting_room
++Nordion Lands
+	+MineFood
+		|minefood_exterior
+		|minefood_interior
+	+Mojang_Processors
+		|Mojang_Processors
+	+NoobField Labs
+		|NoobField_Exterior
+		|Noobfield_Labs
+		|Colton_Dialogue
+	+lunatic corp
+		|Lunatic_Corp
+		|Miku_Dialogue
+		|MIKUBYL
+	+neon castelia city
+		|Mark_Dialogue
+		|ENGAGE_CENTER_ROOM
+		|EVA_EMBLEM_HANGAR
+		+Lyn Apto
+			|Lyn_APTO
+			|sala_Lyn_Apto
+			|Lyn_bedroom
+			|old_charlotte_room
+			|dispensa_Lyn_apto
+		|Neon_Castelia_City
+		|Charlotte_APT
+	+Fergus Industries
+		|Fergus_Interior
+		|Rosa_Dialogue
+		|Osaka_Dialogue
+		|Fergus_Dialogue
+		|Fergus_corredor_2
+		|Fergus_corredor_3
+		|Fergus_corredor_1
+		|Fergus_Basket
+		|Fergus_chemistry_room
+		|Fergus
++Magvel
+	|magvel2
+	+monte silesia
+		|monte_silesia2
+		|monte_silesia
+		|Familia_de_Lorca_Dialogue
+		|Kent_Dialogue_Room
+		|Heath_Dialogue_Room
+		|Ghost_Nimbus_Dialogue_Room
+		|monte_silesia_RVL
+	|magvel1
++PC
+	|UtauOS_Desktop(Alpha)
+	|MikuOS_Go(Alpha)
+	+mikunet
+		|MIKUNET
+		|ENGAGESITE
+		|noobfield_site
+	|MINEFOOD_POS
++Teleporto Jolyne Kujo
+	|TP_JOLYNE_KUJO
++wii u
+	|Wii_U_MENU_room
+	|TV_SCREEN_ROOM

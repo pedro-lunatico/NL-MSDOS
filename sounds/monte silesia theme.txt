@@ -1,0 +1,8 @@
+extension=.mp3
+exists=1
+source=monte silecia.mp3
+kind=3
+effects=1
+volume=0.8
+pan=0
+preload=0

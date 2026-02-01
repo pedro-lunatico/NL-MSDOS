@@ -1,0 +1,160 @@
++MikuOS
+	+Cursors
+		+Black
+			|click_black
+			|normal_black
+		+Miku
+			|click_miku
+			|normal_miku
++Butões
+	|play
+	|Botão 1
+	|Butão 2
+	|Butão 3
+	|Tente De Novo
+	|button
+	|botao_sair
+	|gui_close
+	|reddy
+	|spr_ui_slot
+	|minimizar
+	|spr_room_switch
++Player
+	|ply_standing
+	|ply_walking_left
+	|ply_walking_right
+	|ply_sword
+	|ply_Horse
+	|ply_dance
+	|ply_alt
+	|ply_alt_sword
+	|ply_dance_alt
+	|ply_Berserker
+	|ply_Berserker_Sword
+	|ply_Berserker_Walk
+	|ply_Horse_Idle
++Placeholders
+	|Placeholder64
+	|PlaceHolder128
+	|Placeholder
+	|Placeholder2
+	|Placeholder3
+	|placeholder4
+	|placeholder5
+	|Empty
+	|colizao_isometric_sprite1
+	|colizao_isometric_sprite2
+	|colizao_isometric_sprite4
+	|colizao_isometric_sprite3
+	|FPS_WALL
+	|FPS_WALL01
++Hand
+	|hand_cup
+	|hand_sword
++Castelia City
+	|predio Castelia City
+	|predio Castelia Cty x0.5
+	|predio Castelia City x0.7
+	|engage center
+	|Mark
+	|EVA_EMBLEM_spr
+	|leaf_enemy_spr
+	|Sakura_spr
++Hatsune Miku
+	|Miku Grande
+	|Miku Pequena
+	|overheat_alarm_spr
++Other
+	|select_furniture
+	|bullet
+	|Fergus Conote
+	|Dew_spr
+	|door
+	|door x2
+	|door_simple
+	|Command Block
+	|Caixa de Som
+	+NoobField
+		|colton
+		|sprite36_Noobfield_Colton_remake-removebg-preview
+	|noobfield_colton
+	|Osaka Sprite
+	|LINK
+	|cavalo_sprite
+	+Nick
+		|Nick_Fir
+		|Nick_Revolution
+	+Nami
+		|Nami_standing
+		|Nami_Moving
+		|Nami_stewardess1
+		|Nami_stewardess_moving
+		|Nami_stewardess2
+		|Nami_stewardess3
+		|Nami_Burglar_spr
+		|ghost_Nimbus
+	|Blz_Blade_Pedestal_spr
+	|SPR_smoke
+	|bullet_spr
+	|spr_levelup
+	+EVA EMBLEM
+		|EVA_EMBLEM_ATTACK
+		|EVA_EMBLEM_IDLE
+		|EVA_EMBLEM_WALK
+	|Casa_LorcaStyle
+	|crafting_spr
+	+apto
+		|spr_armario
+		|spr_sofa
+		|spr_tv
+	|DRa_Rosa_Mei_spr
+	|Dawn_spr
+	|book_spr
+	+PC
+		|POV_REC_ICON
+		|Nordion_Drift_ICON
++Magvel
+	|Comunism_Nami
+	|Cavalier
+	|Cavalier2
+	|Pump_Jack_spr
++aviao
+	|aviao_Spr
+	|aviao_pousado_spr
+	|spr_ground
++ELEMENT
+	|spr_boron
+	|spr_carbon
+	|chemistry_manual_ui
++cg
+	|Ghost_Nimbus_CG
+	|Kent_CG
+	|Heath_CG
++main menu
+	|aero_botton_template
+	|Credits_spr
+	|back_spr
+	|play_spr
+	|new_game_spr
+	|load_game_spr
+	|how_to_play
+	|settings_spr
+	|resolution_spr
+	|window_spr
++portrait
+	|shampoo_portrait
+	|spr_portrait_dew
+	|spr_portrait_dew_rage
+	|spr_portrait_charlotte
+	|spr_portrait_charlotte_rage
+	|spr_portrait_charlotte_berserk
++pokemon
+	|spr_makernimite
+	|spr_volcarona
+	|spr_magikarp
+	|spr_tepig
+	+trainer
+		|player_trainer
+		|Leaf_trainer
+		|Rosa_trainer
+	|batalhar_button_spr

@@ -1,0 +1,74 @@
++MikuOS
+	|MikuOS_Welcome 
+	|MIKU NET
+	|A Code Guy
+	|NoobField Labs Theme
+	+Sound Effects
+		|UtauOS_Bootup
+		+MikuNet
+			+MinePay
+				|bought_it
+	|MikuOS_Theme
++sfx
+	|dano_de_espada
+	|level_up_SFX
+	|Mikubyl_Alarm_SFX
+	|new_closet
+	|MENU_Select
+	|explode
+	+sword
+		|Sword_SFX
+		|Sword2_SFX
+		|Sword3_SFX
+	+EVA EMBLEM
+		|EVA_PAIN
+		|EVA2_PAIN
+		|EVA3_PAIN
+	|text_sfx
+	|cave_sound
+	|Nami_factory_grunidos
+	+Nami Torture Ambience
+		|torture_ambience_1
+		|torture_ambience_2
+		|torture_ambience_3
+		|torture_ambience_4
+		|torture_ambience_5
++music
+	|Nordion Lands Theme
+	|TELEPORT_JOLYNE_KUJO_OST
+	|Dance_Music
+	|mikubyl_alarm
+	|the Revolution of Fir
+	|monte silesia theme
+	|Tutorial song
+	|gameover_theme
+	|magvel theme
+	|a GOD of Secretary
+	|Fergus Interior Theme
+	|Noobfield Exterior theme
+	|ENGAGE CENTER BGM
+	|The Father of Fire Head
+	|the Lunatic Girl
+	|The Girl of The Plains
+	|The Dimensional Girl
+	|The Conote Empire
+	|Neon Castelia City Theme
+	|Lunatic Corp Theme
+	|Fergus Theme
+	|Revolution Racing
+	|transformation_Song
+	|dialogo com os corredores
+	|settings_song
+	|FERGUS_FACTORY_OST
+	|quadra_de_basquete
++voice
+	+charlotte
+		|charlotte_Pain
+		|charlotte2_Pain
+		|charlotte3_Pain
+	|Colton_Pain
+	|Fergus_Pain
+	|Miku_Pain
+	|mark_Pain
+	|osaka_Pain
+|sound55_critical hit

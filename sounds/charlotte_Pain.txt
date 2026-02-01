@@ -1,0 +1,8 @@
+extension=.wav
+exists=1
+source=charlotte_pain1.wav
+kind=0
+effects=0
+volume=0.6
+pan=0
+preload=1

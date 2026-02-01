@@ -1,0 +1,8 @@
+extension=.wav
+exists=1
+source=1.wav
+kind=0
+effects=29
+volume=1
+pan=0
+preload=1

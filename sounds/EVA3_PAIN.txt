@@ -1,0 +1,8 @@
+extension=.wav
+exists=1
+source=pain3.wav
+kind=0
+effects=0
+volume=1
+pan=1
+preload=1
