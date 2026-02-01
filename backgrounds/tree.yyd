@@ -1,0 +1,72 @@
++game system
+	|background6
+	|background3
+	+tutorial
+		|background31
+		|background32
+		|background33
+		|background38
+	|background45
+	|background46
++PC
+	|UtauOS Desktop Beta
+	|MikuOS Go (Beta)
+	|UtauOS Desktop Pro Alpha
+	+MikuNet
+		|mikunetBG
+		|ENGAGESITEBG
+		|noobfield_nl
+		|nami_store
+	|MIKUOS_MINEFOOD
++magvel
+	|magvel1_bg
+	|Magvel2_bg
+	|magvel3_bg
+	|Monte_silesiabg
+	|background35
++Teleporto Jolyne Kujo
+	|TP_JOLYNE_KUJO_BG
++Nordion Lands
+	+minefood
+		|background23
+		|background24
+	+mojang processors
+		|background22_mojanj processors
+	+Noobfield Labs
+		|Noobfield
+		|NoobField exterior
+		|background18
+	+Lunatic  Corp
+		|background2
+		|background9
+		|background37
+	+Fergus
+		|background1
+		|background0
+		|background7
+		|background8
+		|background20
+		|background47
+		|background48
+		|background49
+		|background50
+		|background51
+	+neon castelia city
+		|background4
+		|background5
+		|background10
+		|background11
+		|background12
+		|background39
+		|background40
+		|background41
+		|background42
+		|background43
+		|background44
+		|background55
++FPS
+	|FPS_texture_wall1
+	|FPS_texture_floor
+	|FPS_texture_floor2
++plane
+	|background56
