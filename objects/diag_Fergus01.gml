@@ -4,83 +4,78 @@ lib_id=1
 action_id=603
 applies_to=self
 */
-/// --- Inicialização do Diálogo Estilo Aero ---
+/// --- Inicialização Fergus (O Satânico de Nordion) ---
+
+scr_Fergus_Dialogos(); // Carrega a lista global.f_falas com os 45+ diálogos
 
 dialogo_ativo = true;
-fala_atual = 0;
+fase = 0; // 0: Intro, 1: Escolha, 2: Resposta, 3: Berserk
 caracteres = 0;
-contador = 0;
 velocidade = 2;
-fase = 0;
-opcao_escolhida = 0;
-
-cor_vidro = make_color_rgb(150, 220, 255);
-cor_brilho = c_white;
-
-// --- Textos (Agora com tags corretas) ---
-fala0 = "Fergus;esta olhando o que? Falha Genetica?";
-fala1 = "vc; o que e Respondo?";
-
-fala1_0 = "vc; estou apenas fazendo a ronda";
-fala1_1 = "Fergus; acho bom";
-
-fala2_0 = "vc; porque voce nao vai cuidar da sua vida?";
-fala2_1 = "Fergus; voce esta brincando com o perigo... cria de becker";
-
-fala3_0 = "vc;até mais Sr Mei kkkkkk";
-fala3_1 = "Fergus;sua cria de becker volta aqui voce save muito bem que eu não quero ser um Mei ";
-
-max_falas_opcao1 = 2;
-max_falas_opcao2 = 2;
-max_falas_opcao3 = 2;
-
+raiva_nivel = 0;
+opcao_sel = 0;
 texto = "";
+contador = 0;
+// Estética Aero
+cor_vidro = make_color_rgb(100, 200, 255);
+texto_exibir = "Fergus: Ora, se não é a Tenente de proveta. Veio polir meus terminais ou vai ficar me encarando com esse olhar de rascunho?";
+texto = "";
+fase = 0; // Começa na introdução
+bg_atual = background7; // BG inicial do laboratório
+background_index[0] = bg_atual;
 #define Step_0
 /*"/*'/**//* YYD ACTION
 lib_id=1
 action_id=603
 applies_to=self
 */
-// --- LÓGICA DE MOVIMENTO (Já adaptada para GM8.1) ---
-var _key_left, _key_right, _key_up, _key_down;
-_key_left  = keyboard_check(vk_left);
-_key_right = keyboard_check(vk_right);
-_key_up    = keyboard_check(vk_up);
-_key_down  = keyboard_check(vk_down);
+/// --- Lógica de Dating Sim & Geopolítica ---
 
-// Checa Inatividade
-if (keyboard_check(vk_anykey)) {
-    idle_timer = 0;
-    show_idle_balloon = false;
-    caracteres = 0; // Reseta digitação do balão
-} else {
-    idle_timer += 1;
-    if (idle_timer >= idle_limit) {
-        show_idle_balloon = true;
+if (dialogo_ativo) {
+
+    // FASE 0: Introdução Sádica do Fergus
+    if (fase == 0) {
+        texto = texto_exibir;
+        if (caracteres >= string_length(texto) && (keyboard_check_pressed(vk_anykey) || mouse_check_button_pressed(mb_left))) {
+            fase = 1; // Abre o balão de escolhas
+            caracteres = 0;
+        }
     }
-}
 
-// Movimentação e Drift (Código anterior otimizado)
-var _max_vel;
-if (boost_timer > 0) { _max_vel = boost_speed; boost_timer -= 1; } else { _max_vel = move_speed; }
+    // FASE 2: Resposta e Tréplica
+    else if (fase == 2) {
+        if (caracteres == 0) {
+            var tema;
+            if (opcao_escolhida == 1) { tema = "FILHOS"; background_index[0] = background7; }
+            if (opcao_escolhida == 2) { tema = "GEO";    background_index[0] = background57; }
+            if (opcao_escolhida == 3) { tema = "LYN";    background_index[0] = background58; }
 
-if (_key_left)  { hsp -= 0.5; facing = -1; }
-if (_key_right) { hsp += 0.5; facing = 1;  }
-if (!_key_left && !_key_right) { hsp -= sign(hsp) * 0.4; if (abs(hsp) < 0.5) hsp = 0; }
-if (_key_up)    { vsp -= 0.5; }
-if (_key_down)  { vsp += 0.5; }
-if (!_key_up && !_key_down) { vsp -= sign(vsp) * 0.4; if (abs(vsp) < 0.5) vsp = 0; }
+            // Sorteia um diálogo do Fergus baseado no tema escolhido
+            var lista_temp, i, s;
+            lista_temp = ds_list_create();
+            for (i=0; i<ds_list_size(global.f_falas); i+=1) {
+                s = ds_list_find_value(global.f_falas, i);
+                if (string_pos(tema, s) > 0) ds_list_add(lista_temp, s);
+            }
+            texto = ds_list_find_value(lista_temp, irandom(ds_list_size(lista_temp)-1));
+            ds_list_destroy(lista_temp);
+        }
 
-// Colisão Slide
-if (place_meeting(x + hsp, y, solido)) { while (!place_meeting(x + sign(hsp), y, solido)) x += sign(hsp); hsp = 0; }
-x += hsp;
-if (place_meeting(x, y + vsp, solido)) { while (!place_meeting(x, y + sign(vsp), solido)) y += sign(vsp); vsp = 0; }
-y += vsp;
+        // Avançar após a resposta
+        if (caracteres >= string_length(texto) && (keyboard_check_pressed(vk_anykey) || mouse_check_button_pressed(mb_left))) {
+            if (opcao_escolhida == 3) raiva_nivel += 1;
 
-// --- LÓGICA DO BALÃO FRUTIGER ---
-if (show_idle_balloon) {
-    texto_balao = "vc; vai vai anda"; // Tag para mostrar o portrait da Charlotte/Fir
-    if (caracteres < string_length(texto_balao)) {
+            if (raiva_nivel >= 3) {
+                fase = 3; // Berserk!
+            } else {
+                fase = 1; // Volta para o balão de escolhas
+                caracteres = 0;
+            }
+        }
+    }
+
+    // Mecanismo de Digitação (Typewriter)
+    if (fase != 1 && caracteres < string_length(texto)) {
         contador += 1;
         if (contador >= velocidade) {
             caracteres += 1;
@@ -109,57 +104,86 @@ lib_id=1
 action_id=603
 applies_to=self
 */
-// 1. Desenha o Cavalo
-draw_self();
+/// --- Draw Estilo Dating Sim Nordion ---
 
-// 2. HUD de Drift Simples
-if (drift_meter > 0) {
-    draw_set_color(c_aqua);
-    draw_rectangle(x-20, y-45, x-20+(drift_meter/drift_max)*40, y-42, false);
-}
-
-// 3. BALÃO DE AVISO (INTERFACE AERO)
-if (show_idle_balloon) {
-    var vx, vy, vw, vh, dy, dh, bx, bw;
+if (dialogo_ativo) {
+    var vx, vy, vw, vh, dy, dh, cx, cy;
     vx = view_xview[0]; vy = view_yview[0];
     vw = view_wview[0]; vh = view_hview[0];
+    cx = vx + vw/2; cy = vy + vh/2;
+    dh = 120; dy = vy + vh - dh - 20;
 
-    dh = 80; // Altura menor para o balão de aviso
-    dy = vy + vh - dh - 20;
-
-    // --- Portrait Charlotte ---
-    if (string_pos("vc;", texto_balao) > 0) {
-        var px, h_p;
-        px = vx + 40;
-        h_p = sprite_get_height(spr_portrait_charlotte);
-        draw_sprite_ext(spr_portrait_charlotte, 0, px, dy - h_p + 10, 0.8, 0.8, 0, c_white, 1);
+    // --- LOGICA DE COR (Substituindo o ?) ---
+    var cor_fundo;
+    if (raiva_nivel >= 2) {
+        cor_fundo = make_color_rgb(255, 100, 100); // Vermelho Alerta
+    } else {
+        cor_fundo = cor_vidro; // Ciano Aero
     }
 
-    // --- CAIXA FRUTIGER AERO GLASS ---
-    // Sombra suave
-    draw_set_alpha(0.3);
-    draw_roundrect_color(vx+30, dy+4, vx+vw-30, dy+dh+4, c_black, c_black, false);
-
-    // Fundo Vidro Azulado
+    // --- CAIXA DE TEXTO (Aero Glass) ---
     draw_set_alpha(0.7);
-    draw_roundrect_color(vx+30, dy, vx+vw-30, dy+dh, cor_vidro, c_white, false);
+    draw_roundrect_color(vx+40, dy, vx+vw-40, dy+dh, cor_fundo, c_white, false);
 
-    // Brilho Glossy Superior (O toque Frutiger Aero)
-    draw_set_alpha(0.4);
-    draw_ellipse_color(vx+60, dy+2, vx+vw-60, dy+dh/2, c_white, cor_vidro, false);
+    draw_set_alpha(0.3); // Brilho Glossy
+    draw_ellipse_color(vx+100, dy+5, vx+vw-100, dy+dh/2, c_white, cor_fundo, false);
 
-    // Borda Branca Fina
     draw_set_alpha(1);
     draw_set_color(c_white);
-    draw_roundrect(vx+30, dy, vx+vw-30, dy+dh, true);
+    draw_roundrect(vx+40, dy, vx+vw-40, dy+dh, true);
 
-    // --- TEXTO DIGITADO ---
+    // --- EXIBIÇÃO DO TEXTO ---
+    draw_set_font(normal)
     draw_set_color(c_black);
-    draw_set_font(-1); // Use sua fonte de diálogo aqui
+    if (fase != 1) {
+        var t_vis;
+        t_vis = string_replace(texto, "Fergus;", "");
+        t_vis = string_replace(t_vis, "FILHOS|", "");
+        t_vis = string_replace(t_vis, "GEO|", "");
+        t_vis = string_replace(t_vis, "LYN|", "");
+        t_vis = string_replace(t_vis, "WARS|", "");
 
-    var t_exibir;
-    t_exibir = string_replace(texto_balao, "vc;", "");
+        draw_text_ext(vx+70, dy+30, string_copy(t_vis, 1, caracteres), 20, vw-140);
+    }
 
-    // Desenha apenas os caracteres processados no Step
-    draw_text_ext(vx+120, dy+25, string_copy(t_exibir, 1, caracteres), 18, vw-180);
+    // --- BALÃO DE OPÇÕES (Fase 1) ---
+    if (fase == 1) {
+        var i, bx1, by1, bx2, by2, txt_op;
+        for (i=0; i<3; i+=1) {
+            bx1 = cx - 220; bx2 = cx + 220;
+            by1 = cy - 60 + (i * 45); by2 = by1 + 35;
+
+            txt_op = ds_list_find_value(global.c_respostas, i);
+            txt_op = string_replace(txt_op, "vc;", "");
+
+            // Hover do Mouse (Colisao Simples GM8)
+            if (mouse_x > bx1 && mouse_x < bx2 && mouse_y > by1 && mouse_y < by2) {
+                draw_set_alpha(0.9);
+                draw_roundrect_color(bx1, by1, bx2, by2, cor_vidro, c_white, false);
+                if (mouse_check_button_pressed(mb_left)) {
+                    opcao_escolhida = i + 1;
+                    fase = 2;
+                    caracteres = 0;
+                }
+            } else {
+                draw_set_alpha(0.6);
+                draw_roundrect_color(bx1, by1, bx2, by2, c_white, cor_vidro, false);
+            }
+            draw_set_alpha(1);
+            draw_set_color(c_black);
+            draw_text_ext(bx1 + 10, by1 + 5, txt_op, 14, 420);
+        }
+    }
+}
+
+// --- EFEITO BERSERK ---
+if (fase == 3) {
+    draw_set_alpha(0.5); draw_set_color(c_maroon);
+    draw_rectangle(vx, vy, vx+vw, vy+vh, false);
+    draw_set_alpha(1);
+    draw_set_color(c_white);
+    draw_text(cx - 100, cy, "ERRO: INSTABILIDADE GENETICA");
+    // Shake de tela simples
+    view_xview[0] += random_range(-5, 5);
+    view_yview[0] += random_range(-5, 5);
 }
