@@ -4,113 +4,158 @@ lib_id=1
 action_id=603
 applies_to=self
 */
-/// --- Inicialização Aero (Rosa & Charlotte) ---
+/// CREATE EVENT - Rosa (UI identica ao Fergus)
+
+scr_Rosa_Dialogos(); // carrega global.c_respostas e global.r_respostas
 
 dialogo_ativo = true;
-fala_atual = 0;
+
+fase = 0; // 0 intro | 1 opcoes | 2 resposta | 3 encerra
 caracteres = 0;
-contador = 0;
 velocidade = 2;
-fase = 0;
-opcao_escolhida = 0;
-
-// Configurações Visuais Aero
-cor_vidro = make_color_rgb(100, 200, 255); // Ciano Aero
-cor_brilho = c_white;
-
-// --- Diálogos Rosa/Charlotte ---
-fala0 = "Rosa:oi Charlotte";
-fala1 = "vc; o que e Respondo?";
-
-fala1_0 = "vc;como anda os seus filhos?";
-fala1_1 = "Rosa; bem eles comecaram o semestre na faculdade";
-fala1_2 = "Rosa; Osian esta fazendo Biologia ea Dawn esta fazendo Quimica";
-
-fala2_0 = "vc; oque voce esta fazendo?";
-fala2_1 = "Rosa; usando edicao genetica para criar o projecto NX";
-fala2_2 = "vc;o mas o ultimo projecto nao era o suficiente?";
-fala2_3 = "Rosa;Claro que nao eu quero mais controle algo";
-fala2_4 = "Rosa;mas exato nao querendo ser desrespeitosa com voce mas....";
-fala2_5 = "Rosa;controle e a algo que nossa ciencia precisa";
-
-fala3_0 = "vc;ate mais senhorita Conote";
-fala3_1 = "Rosa;que Lindo Charlotte voce reconhece meu casamento diferente da Miku";
-fala3_2 = "vc;nao liga pra isso a Miku so esta com ciumes, ate mais";
-
-max_falas_opcao1 = 3;
-max_falas_opcao2 = 6;
-max_falas_opcao3 = 3;
+contador = 0;
 
 texto = "";
+texto_exibir = "Rosa; Voce veio ate aqui sem avisar. Isso e coragem ou curiosidade?";
+
+opcao_sel = 0;
+texto_escolhido = "";
+
+tempo_limite = 330;
+timer_paciencia = 0;
+nivel_incomodo = 0;
+
+// estetica AERO (igual Fergus)
+cor_vidro = make_color_rgb(100, 200, 255);
+
+// lista de opcoes sorteadas
+opcoes_da_vez = ds_list_create();
 #define Step_0
 /*"/*'/**//* YYD ACTION
 lib_id=1
 action_id=603
 applies_to=self
 */
-/// --- Lógica de Progressão ---
+if (!dialogo_ativo) exit;
 
-if (dialogo_ativo) {
-    // Definição do texto por fase
-    if (fase == 0) {
-        if (fala_atual == 0) texto = fala0;
-        if (fala_atual == 1) texto = fala1;
-        if (fala_atual == 2) fase = 1;
+var interacao;
+interacao = mouse_check_button_pressed(mb_left) || keyboard_check_pressed(vk_anykey);
+
+/// ===============================
+/// FASE 0 - INTRO
+/// ===============================
+if (fase == 0) {
+
+    texto = texto_exibir;
+
+    if (interacao) {
+        if (caracteres < string_length(texto)) {
+            caracteres = string_length(texto);
+        } else {
+            fase = 1;
+            caracteres = 0;
+            timer_paciencia = 0;
+        }
     }
-    else if (fase == 2) {
-        if (opcao_escolhida == 1) {
-            if (fala_atual == 0) texto = fala1_0;
-            if (fala_atual == 1) texto = fala1_1;
-            if (fala_atual == 2) texto = fala1_2;
+}
+
+/// ===============================
+/// FASE 1 - OPCOES + PACIENCIA
+/// ===============================
+else if (fase == 1) {
+
+    // sorteio das opcoes (inalterado)
+    if (ds_list_empty(opcoes_da_vez)) {
+
+        var tmp, i;
+        tmp = ds_list_create();
+        ds_list_copy(tmp, global.c_respostas);
+
+        repeat (3) {
+            if (ds_list_size(tmp) > 0) {
+                i = irandom(ds_list_size(tmp) - 1);
+                ds_list_add(opcoes_da_vez, ds_list_find_value(tmp, i));
+                ds_list_delete(tmp, i);
+            }
         }
-        if (opcao_escolhida == 2) {
-            if (fala_atual == 0) texto = fala2_0;
-            if (fala_atual == 1) texto = fala2_1;
-            if (fala_atual == 2) texto = fala2_2;
-            if (fala_atual == 3) texto = fala2_3;
-            if (fala_atual == 4) texto = fala2_4;
-            if (fala_atual == 5) texto = fala2_5;
-        }
-        if (opcao_escolhida == 3) {
-            if (fala_atual == 0) texto = fala3_0;
-            if (fala_atual == 1) texto = fala3_1;
-        }
+
+        ds_list_destroy(tmp);
+        timer_paciencia = 0; // reset do tempo
     }
 
-    // Digitação
-    if (caracteres < string_length(texto) && fase != 1) {
-        contador += 1;
-        if (contador >= velocidade) {
-            caracteres += 1;
-            contador = 0;
-        }
+    // contagem da paciencia
+    timer_paciencia += 1;
+
+    // tempo esgotado
+    if (timer_paciencia >= tempo_limite) {
+
+        texto = "Rosa; Eu nao tenho tempo para isso agora.";
+        fase = 3;
+        caracteres = 0;
+
+        ds_list_clear(opcoes_da_vez);
     }
-    else if (fase != 1) {
-        if (caracteres >= string_length(texto)) {
-            if (keyboard_check_pressed(vk_anykey)) {
-                fala_atual += 1;
-                caracteres = 0;
-                contador = 0;
+}
+
+/// ===============================
+/// FASE 2 - RESPOSTA DA ROSA
+/// ===============================
+else if (fase == 2) {
+
+    if (caracteres == 0 && texto == "") {
+
+        var i, s, chave;
+        chave = string_copy(
+            texto_escolhido,
+            1,
+            string_pos("|", texto_escolhido) - 1
+        );
+
+        for (i = 0; i < ds_list_size(global.r_respostas); i += 1) {
+            s = ds_list_find_value(global.r_respostas, i);
+            if (string_pos(chave, s) > 0) {
+                texto = s;
+                break;
             }
         }
     }
 
-    // Terminar diálogos
-    if (fase == 2) {
-        var m_fala;
-        if (opcao_escolhida == 1) m_fala = max_falas_opcao1;
-        if (opcao_escolhida == 2) m_fala = max_falas_opcao2;
-        if (opcao_escolhida == 3) m_fala = max_falas_opcao3;
-
-        if (fala_atual >= m_fala) {
-            if (opcao_escolhida == 3) {
-                global.next_x = 360; global.next_y = 232;
-                room_goto(Fergus_Interior);
-            } else {
-                fase = 0; fala_atual = 0; caracteres = 0;
-                opcao_escolhida = 0; texto = ""; dialogo_ativo = false;
-            }
+    if (interacao) {
+        if (caracteres < string_length(texto)) {
+            caracteres = string_length(texto);
+        } else {
+            texto = "";
+            fase = 1;
+            caracteres = 0;
+            ds_list_clear(opcoes_da_vez);
         }
+    }
+}
+
+/// ===============================
+/// FASE 3 - ENCERRAMENTO
+/// ===============================
+else if (fase == 3) {
+
+    if (interacao && caracteres < string_length(texto)) {
+        caracteres = string_length(texto);
+    }
+
+    if (interacao && caracteres >= string_length(texto)) {
+        dialogo_ativo = false;
+    }
+}
+
+/// ===============================
+/// TYPEWRITER
+/// ===============================
+if (fase != 1 && caracteres < string_length(texto)) {
+
+    contador += 1;
+
+    if (contador >= velocidade) {
+        caracteres += 1;
+        contador = 0;
     }
 }
 #define Other_4
@@ -134,68 +179,159 @@ lib_id=1
 action_id=603
 applies_to=self
 */
-/// --- Draw Estilo Frutiger Aero (Sem Portrait Rosa) ---
+/// ===============================
+/// DRAW EVENT - ROSA (AERO + PACIENCIA)
+/// ===============================
 
-if (dialogo_ativo) {
-    var vx, vy, vw, vh, dy, dh;
-    vx = view_xview[0]; vy = view_yview[0];
-    vw = view_wview[0]; vh = view_hview[0];
-    dh = 120;
-    dy = vy + vh - dh - 20;
+if (!dialogo_ativo) exit;
 
-    // --- Portrait da Charlotte (Apenas quando ela fala) ---
-    if (string_pos("vc;", texto) > 0 && fase != 1) {
-        var py;
-        py = dy - sprite_get_height(spr_portrait_charlotte);
-        draw_sprite_ext(spr_portrait_charlotte, 0, vx + 50, py, 1, 1, 0, c_white, 1);
-    }
+// -----------------------------
+// BASE DA VIEW
+// -----------------------------
+var vx, vy, vw, vh, cx, cy;
+vx = view_xview[0];
+vy = view_yview[0];
+vw = view_wview[0];
+vh = view_hview[0];
 
-    // --- Caixa Glass Aero ---
-    draw_set_alpha(0.7);
-    draw_roundrect_color(vx+30, dy, vx+vw-30, dy+dh, cor_vidro, c_white, false);
+cx = vx + vw / 2;
+cy = vy + vh / 2;
 
-    draw_set_alpha(0.4); // Brilho Glossy
-    draw_ellipse_color(vx+60, dy+5, vx+vw-60, dy+dh/2, c_white, cor_vidro, false);
+// -----------------------------
+// CAIXA DE TEXTO
+// -----------------------------
+var dy, dh;
+dh = 120;
+dy = vy + vh - dh - 20;
 
-    draw_set_alpha(1);
-    draw_set_color(c_white);
-    draw_roundrect(vx+30, dy, vx+vw-30, dy+dh, true);
+// fundo vidro
+draw_set_alpha(0.7);
+draw_roundrect_color(
+    vx + 40, dy,
+    vx + vw - 40, dy + dh,
+    cor_vidro, c_white, false
+);
+draw_set_alpha(1);
 
-    // --- Texto Limpo ---
-    draw_set_color(c_black);
-    var t_vis;
-    t_vis = string_replace(texto, "vc;", "");
-    t_vis = string_replace(t_vis, "Rosa;", "");
-    t_vis = string_replace(t_vis, "Rosa:", "");
-    draw_text_ext(vx+60, dy+30, string_copy(t_vis, 1, caracteres), 22, vw-140);
+// borda
+draw_set_color(c_white);
+draw_roundrect(
+    vx + 40, dy,
+    vx + vw - 40, dy + dh,
+    true
+);
 
-    // --- Menu de Opções ---
-    if (fase == 1) {
-        var i;
-        for (i=0; i<3; i+=1) {
-            var bx1, by1, bx2, by2, txt;
-            bx1 = vx + 70; bx2 = vx + 550;
-            by1 = vy + vh - 150 + (i * 35); by2 = by1 + 30;
+// -----------------------------
+// TEXTO COM FILTRO DE KEYWORDS
+// -----------------------------
+draw_set_font(normal);
+draw_set_color(c_black);
 
-            if (i == 0) txt = "1) perguntar dos filhos";
-            if (i == 1) txt = "2) perguntar oque voce esta fazendo";
-            if (i == 2) txt = "3) ir embora";
+if (fase != 1) {
 
-            if (mouse_x > bx1 && mouse_x < bx2 && mouse_y > by1 && mouse_y < by2) {
-                draw_set_alpha(0.9);
-                draw_roundrect_color(bx1, by1, bx2, by2, cor_vidro, c_white, false);
-                draw_set_color(c_black);
-                if (mouse_check_button_pressed(mb_left)) {
-                    opcao_escolhida = i + 1;
-                    fase = 2; fala_atual = 0; caracteres = 0;
-                }
-            } else {
-                draw_set_alpha(0.6);
-                draw_roundrect_color(bx1, by1, bx2, by2, cor_vidro, c_white, false);
-                draw_set_color(c_white);
-            }
-            draw_set_alpha(1);
-            draw_text(bx1 + 10, by1 + 5, txt);
-        }
-    }
+    var t;
+    t = string(texto);
+
+    // filtro absoluto
+    t = string_replace(t, "Rosa;", "");
+    t = string_replace(t, "Charlotte;", "");
+    t = string_replace(t, "PASSADO|", "");
+    t = string_replace(t, "FERGUS|", "");
+    t = string_replace(t, "GUERRA|", "");
+    t = string_replace(t, "CHARLOTTE|", "");
+    t = string_replace(t, "EVA|", "");
+    t = string_replace(t, "WIIU|", "");
+    t = string_replace(t, "ITEM_", "");
+    t = string_replace(t, "|", "");
+
+    draw_text_ext(
+        vx + 70,
+        dy + 30,
+        string_copy(t, 1, caracteres),
+        20,
+        vw - 140
+    );
 }
+
+// -----------------------------
+// MENU DE OPCOES CENTRALIZADO
+// -----------------------------
+if (fase == 1) {
+
+    var i;
+    var largura_caixa, altura_caixa;
+    var bx1, by1, bx2, by2;
+    var txt_op;
+
+    largura_caixa = 440;
+    altura_caixa = 24;
+
+    for (i = 0; i < ds_list_size(opcoes_da_vez); i += 1) {
+
+        bx1 = cx - (largura_caixa / 2);
+        by1 = cy - (ds_list_size(opcoes_da_vez) * altura_caixa / 2)
+              + (i * (altura_caixa + 6));
+        bx2 = bx1 + largura_caixa;
+        by2 = by1 + altura_caixa;
+
+        txt_op = ds_list_find_value(opcoes_da_vez, i);
+        txt_op = string_copy(
+            txt_op,
+            string_pos("|", txt_op) + 1,
+            string_length(txt_op)
+        );
+
+        if (
+            mouse_x > bx1 && mouse_x < bx2 &&
+            mouse_y > by1 && mouse_y < by2
+        ) {
+
+            draw_set_alpha(0.9);
+            draw_roundrect_color(
+                bx1, by1, bx2, by2,
+                cor_vidro, c_white, false
+            );
+
+            if (mouse_check_button_pressed(mb_left)) {
+                texto_escolhido = ds_list_find_value(opcoes_da_vez, i);
+                fase = 2;
+                caracteres = 0;
+            }
+
+        } else {
+
+            draw_set_alpha(0.6);
+            draw_roundrect_color(
+                bx1, by1, bx2, by2,
+                c_white, cor_vidro, false
+            );
+        }
+
+        draw_set_alpha(1);
+        draw_set_color(c_black);
+        draw_text_ext(
+            bx1 + 12,
+            by1 + 5,
+            txt_op,
+            16,
+            largura_caixa - 24
+        );
+    }
+
+    // -----------------------------
+    // BARRA DE PACIENCIA (IGUAL FERGUS)
+    // -----------------------------
+    var bw;
+    bw = (1 - (timer_paciencia / tempo_limite)) * 440;
+
+    draw_set_color(c_white);
+    draw_rectangle(
+        cx - 220,
+        cy + (ds_list_size(opcoes_da_vez) * altura_caixa / 2) + 18,
+        (cx - 220) + bw,
+        cy + (ds_list_size(opcoes_da_vez) * altura_caixa / 2) + 24,
+        false
+    );
+}
+
+draw_set_alpha(1);

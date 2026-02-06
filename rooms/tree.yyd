@@ -1,3 +1,5 @@
+|Fergus_Dialogue
+|Rosa_Dialogue
 +Game System
 	|Title_Screen
 	|GameOver
@@ -37,9 +39,7 @@
 		|Charlotte_APT
 	+Fergus Industries
 		|Fergus_Interior
-		|Rosa_Dialogue
 		|Osaka_Dialogue
-		|Fergus_Dialogue
 		|Fergus_corredor_2
 		|Fergus_corredor_3
 		|Fergus_corredor_1
