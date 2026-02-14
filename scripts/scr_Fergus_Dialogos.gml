@@ -5,7 +5,7 @@ global.f_falas = ds_list_create();
 ds_list_add(global.f_falas, "FILHOS|Fergus; A Dawn passou a noite sintetizando compostos. Ela sabe que se falhar, será comparada a voce. Isso a mantém acordada.");
 ds_list_add(global.f_falas, "FILHOS|Fergus; O Osian está na faculdade de programaçao neural aos 16. Ele está mapeando cérebros clonados enquanto voce mal entende o seu.");
 ds_list_add(global.f_falas, "FILHOS|Fergus; Rosa reclama que eu sou um monstro, mas ela nao viu o que eu vi nas Engage Wars. Meus filhos serao hardware puro, nao carne fraca.");
-ds_list_add(global.f_falas, "FILHOS|Fergus; A educaçao em Nordion é um privilégio. Para a Dawn e o Osian, é uma armadura contra a mediocridade biologica.");
+ds_list_add(global.f_falas, "FILHOS|Fergus; A educaçao em Nordion é um privilégio. Para a Dawn e o Osian, e uma armadura contra a mediocridade biologica.");
 ds_list_add(global.f_falas, "FILHOS|Fergus; Se eu vir a Dawn conversando com 'crias' como voce, eu a tranco no laboratorio por um semestre. Ela é engenheira, nao assistente social.");
 ds_list_add(global.f_falas, "FILHOS|Fergus; O Osian vai programar os proximos Bernadettas. Ele terá o poder de criar vida digital, algo que voce, uma copia, jamais entenderá.");
 ds_list_add(global.f_falas, "FILHOS|Fergus; Eles sao o legado de Magvel em solo de Nordion. Voce é apenas o descarte de uma ciencia que já superamos.");

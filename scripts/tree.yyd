@@ -4,7 +4,7 @@
 	|setup_dialogue
 	|dialogue
 +Economy
-	|money_give
+	|scr_scan_furniture
 +3d FPS
 	|FPS_MOVE_PLAYER
 	|FPS_COLISION
@@ -14,5 +14,7 @@
 	|scr_carregar_dialogos
 	|scr_get_item_info
 |scr_find_files
-|scr_Fergus_Dialogos
-|scr_Rosa_Dialogos
++charaters dialogue
+	|scr_Rosa_Dialogos
+	|scr_Fergus_Dialogos
+	|scr_gerar_insulto_tp_jk

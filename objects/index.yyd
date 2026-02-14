@@ -212,3 +212,5 @@ plane_player
 plane_floor
 dayNight_controller
 wiiU_meu_control
+obj_minigame_torre
+tp_control_room

@@ -156,6 +156,8 @@
 			|NAMI_stewardess_OBJ2
 			|NAMI_stewardess_OBJ3
 			|Concorde_INFEITE
+			|obj_minigame_torre
+			|tp_control_room
 	+APTO SYSTEM
 		+lyn apto
 			|trocar_room

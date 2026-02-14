@@ -1,5 +1,3 @@
-|Fergus_Dialogue
-|Rosa_Dialogue
 +Game System
 	|Title_Screen
 	|GameOver
@@ -46,6 +44,8 @@
 		|Fergus_Basket
 		|Fergus_chemistry_room
 		|Fergus
+		|Fergus_Dialogue
+		|Rosa_Dialogue
 +Magvel
 	|magvel2
 	+monte silesia
@@ -67,6 +67,7 @@
 	|MINEFOOD_POS
 +Teleporto Jolyne Kujo
 	|TP_JOLYNE_KUJO
+	|Teleport_Jolyne_Kujo_control_room
 +wii u
 	|Wii_U_MENU_room
 	|TV_SCREEN_ROOM
