@@ -4,88 +4,145 @@ lib_id=1
 action_id=603
 applies_to=self
 */
-/// --- Inicialização do Diálogo Estilo Aero ---
+/// --- Inicialização Fergus (O Satânico de Nordion) ---
+
+scr_Fergus_Dialogos(); // Carrega a lista global.f_falas com os 45+ diálogos
 
 dialogo_ativo = true;
-fala_atual = 0;
+fase = 0; // 0: Intro, 1: Escolha, 2: Resposta, 3: Berserk
 caracteres = 0;
-contador = 0;
 velocidade = 2;
-fase = 0;
-opcao_escolhida = 0;
-
-cor_vidro = make_color_rgb(150, 220, 255);
-cor_brilho = c_white;
-
-// --- Textos (Agora com tags corretas) ---
-fala0 = "Fergus;esta olhando o que? Falha Genetica?";
-fala1 = "vc; o que e Respondo?";
-
-fala1_0 = "vc; estou apenas fazendo a ronda";
-fala1_1 = "Fergus; acho bom";
-
-fala2_0 = "vc; porque voce nao vai cuidar da sua vida?";
-fala2_1 = "Fergus; voce esta brincando com o perigo... cria de becker";
-
-fala3_0 = "vc;até mais Sr Mei kkkkkk";
-fala3_1 = "Fergus;sua cria de becker volta aqui voce save muito bem que eu não quero ser um Mei ";
-
-max_falas_opcao1 = 2;
-max_falas_opcao2 = 2;
-max_falas_opcao3 = 2;
-
+raiva_nivel = 0;
+opcao_sel = 0;
 texto = "";
+contador = 0;
+tempo_limite = 330; // 10 segundos (se a room for 30fps)
+timer_paciencia = 0;
+texto_escolhido = "";
+t = ""
+// Estética Aero
+cor_vidro = make_color_rgb(100, 200, 255);
+texto_exibir = "Fergus: Ora, se nao e a Tenente de proveta. Veio polir meus terminais ou vai ficar me encarando com esse olhar de cria de becker?";
+texto = "";
+fase = 0; // Começa na introdução
+bg_atual = background7; // BG inicial do laboratório
+background_index[0] = bg_atual;
+
+// Lista para armazenar as 3 opções sorteadas da vez
+opcoes_da_vez = ds_list_create();
 #define Step_0
 /*"/*'/**//* YYD ACTION
 lib_id=1
 action_id=603
 applies_to=self
 */
-// --- LÓGICA DE MOVIMENTO (Já adaptada para GM8.1) ---
-var _key_left, _key_right, _key_up, _key_down;
-_key_left  = keyboard_check(vk_left);
-_key_right = keyboard_check(vk_right);
-_key_up    = keyboard_check(vk_up);
-_key_down  = keyboard_check(vk_down);
+/// --- Lógica de Dating Sim: Reset de Timer e Teleporte ---
 
-// Checa Inatividade
-if (keyboard_check(vk_anykey)) {
-    idle_timer = 0;
-    show_idle_balloon = false;
-    caracteres = 0; // Reseta digitação do balão
-} else {
-    idle_timer += 1;
-    if (idle_timer >= idle_limit) {
-        show_idle_balloon = true;
-    }
-}
+if (dialogo_ativo) {
 
-// Movimentação e Drift (Código anterior otimizado)
-var _max_vel;
-if (boost_timer > 0) { _max_vel = boost_speed; boost_timer -= 1; } else { _max_vel = move_speed; }
+    // Captura interação para pular texto
+    var interacao;
+    interacao = mouse_check_button_pressed(mb_left) || keyboard_check_pressed(vk_anykey);
 
-if (_key_left)  { hsp -= 0.5; facing = -1; }
-if (_key_right) { hsp += 0.5; facing = 1;  }
-if (!_key_left && !_key_right) { hsp -= sign(hsp) * 0.4; if (abs(hsp) < 0.5) hsp = 0; }
-if (_key_up)    { vsp -= 0.5; }
-if (_key_down)  { vsp += 0.5; }
-if (!_key_up && !_key_down) { vsp -= sign(vsp) * 0.4; if (abs(vsp) < 0.5) vsp = 0; }
-
-// Colisão Slide
-if (place_meeting(x + hsp, y, solido)) { while (!place_meeting(x + sign(hsp), y, solido)) x += sign(hsp); hsp = 0; }
-x += hsp;
-if (place_meeting(x, y + vsp, solido)) { while (!place_meeting(x, y + sign(vsp), solido)) y += sign(vsp); vsp = 0; }
-y += vsp;
-
-// --- LÓGICA DO BALÃO FRUTIGER ---
-if (show_idle_balloon) {
-    texto_balao = "vc; vai vai anda"; // Tag para mostrar o portrait da Charlotte/Fir
-    if (caracteres < string_length(texto_balao)) {
-        contador += 1;
-        if (contador >= velocidade) {
-            caracteres += 1;
-            contador = 0;
+    // FASE 0: Introdução
+    if (fase == 0) {
+        texto = texto_exibir;
+        if (interacao) {
+            if (caracteres < string_length(texto)) {
+                caracteres = string_length(texto);
+            } else {
+                fase = 1;
+                caracteres = 0;
+                timer_paciencia = 0; // Inicia o timer do zero
+            }
         }
+    }
+
+    // FASE 1: Menu de Opções com Sorteio e Timer
+    else if (fase == 1) {
+        // Sorteia as opções se a lista estiver vazia
+        if (ds_list_empty(opcoes_da_vez)) {
+            var lista_temp, ind;
+            lista_temp = ds_list_create();
+            ds_list_copy(lista_temp, global.c_respostas);
+            repeat(3) {
+                if (ds_list_size(lista_temp) > 0) {
+                    ind = irandom(ds_list_size(lista_temp) - 1);
+                    ds_list_add(opcoes_da_vez, ds_list_find_value(lista_temp, ind));
+                    ds_list_delete(lista_temp, ind);
+                }
+            }
+            ds_list_destroy(lista_temp);
+            timer_paciencia = 0; // RESET DO TEMPO ao gerar novas opções
+        }
+
+        // Contagem regressiva
+        timer_paciencia += 1;
+
+        // SE O TEMPO ACABAR: Teleporta para a room "Fergus"
+        if (timer_paciencia >= tempo_limite) {
+            ds_list_clear(opcoes_da_vez);
+            room_goto(Fergus);
+        }
+    }
+
+    // FASE 2: Resposta e Tréplica
+    else if (fase == 2) {
+        if (caracteres == 0) {
+            var tema;
+            if (string_pos("Dawn", texto_escolhido) > 0) { tema = "FILHOS"; background_index[0] = background57; }
+            else if (string_pos("Pangeia", texto_escolhido) > 0) { tema = "GEO"; background_index[0] = background59; }
+            else { tema = "LYN"; background_index[0] = background58; }
+
+            if (raiva_nivel >= 2) {
+                texto = "Fergus; E-espere... Charlotte, controle sua endocrinologia! Mantenha a calma!";
+            } else {
+                var lf, i, s; lf = ds_list_create();
+                for (i=0; i<ds_list_size(global.f_falas); i+=1) {
+                    s = ds_list_find_value(global.f_falas, i);
+                    if (string_pos(tema, s) > 0) ds_list_add(lf, s);
+                }
+                if (ds_list_size(lf) > 0) texto = ds_list_find_value(lf, irandom(ds_list_size(lf)-1));
+                ds_list_destroy(lf);
+            }
+        }
+
+        if (interacao) {
+            if (caracteres < string_length(texto)) {
+                caracteres = string_length(texto);
+            } else {
+                if (string_pos("LYN", texto_escolhido) > 0) raiva_nivel += 1;
+
+                if (raiva_nivel >= 3) {
+                    fase = 3; timer_berserk = 0; caracteres = 0;
+                } else {
+                    fase = 1;
+                    caracteres = 0;
+                    ds_list_clear(opcoes_da_vez); // Limpa para resetar o timer no próximo frame
+                }
+            }
+        }
+    }
+
+    // FASE 3: BERSERK
+    else if (fase == 3) {
+        if (caracteres == 0) texto = "Charlotte; Eu vou te mostrar quem é rascunho!";
+
+        if (interacao && caracteres < string_length(texto)) {
+            caracteres = string_length(texto);
+        }
+
+        timer_berserk += 1;
+        view_xview[0] += random_range(-10, 10);
+        view_yview[0] += random_range(-10, 10);
+
+        if (timer_berserk > 180) room_goto(Fergus_Fuga);
+    }
+
+    // Efeito Typewriter
+    if (fase != 1 && caracteres < string_length(texto)) {
+        contador += 1;
+        if (contador >= velocidade) { caracteres += 1; contador = 0; }
     }
 }
 #define Other_4
@@ -109,57 +166,166 @@ lib_id=1
 action_id=603
 applies_to=self
 */
-// 1. Desenha o Cavalo
-draw_self();
+/// ===============================
+/// DRAW EVENT - ROSA (AERO + PACIENCIA)
+/// ===============================
 
-// 2. HUD de Drift Simples
-if (drift_meter > 0) {
-    draw_set_color(c_aqua);
-    draw_rectangle(x-20, y-45, x-20+(drift_meter/drift_max)*40, y-42, false);
+if (!dialogo_ativo) exit;
+
+// -----------------------------
+// BASE DA VIEW
+// -----------------------------
+var vx, vy, vw, vh, cx, cy;
+vx = view_xview[0];
+vy = view_yview[0];
+vw = view_wview[0];
+vh = view_hview[0];
+
+cx = vx + vw / 2;
+cy = vy + vh / 2;
+
+// -----------------------------
+// CAIXA DE TEXTO
+// -----------------------------
+var dy, dh;
+dh = 120;
+dy = vy + vh - dh - 20;
+
+// fundo vidro
+draw_set_alpha(0.7);
+draw_roundrect_color(
+    vx + 40, dy,
+    vx + vw - 40, dy + dh,
+    cor_vidro, c_white, false
+);
+draw_set_alpha(1);
+
+// borda
+draw_set_color(c_white);
+draw_roundrect(
+    vx + 40, dy,
+    vx + vw - 40, dy + dh,
+    true
+);
+
+// -----------------------------
+// TEXTO COM FILTRO DE KEYWORDS
+// -----------------------------
+draw_set_font(normal);
+draw_set_color(c_black);
+
+if (fase != 1) {
+
+    var t;
+    t = string(texto);
+
+    // filtro absoluto
+    t = string_replace(t, "Rosa;", "");
+    t = string_replace(t, "Charlotte;", "");
+    t = string_replace(t, "PASSADO|", "");
+    t = string_replace(t, "FERGUS|", "");
+    t = string_replace(t, "GUERRA|", "");
+    t = string_replace(t, "CHARLOTTE|", "");
+    t = string_replace(t, "EVA|", "");
+    t = string_replace(t, "WIIU|", "");
+    t = string_replace(t, "ITEM_", "");
+    t = string_replace(t, "|", "");
+    t = string_replace(t, "Fergus;", "");
+    t = string_replace(t, "Charlotte;", "");
+    t = string_replace(t, "vc;", "");
+    t = string_replace(t, "FILHOS|", "");
+    t = string_replace(t, "GEO|", "");
+    t = string_replace(t, "LYN|", "");
+    t = string_replace(t, "WARS|", "");
+
+    draw_text_ext(
+        vx + 70,
+        dy + 30,
+        string_copy(t, 1, caracteres),
+        20,
+        vw - 140
+    );
 }
 
-// 3. BALÃO DE AVISO (INTERFACE AERO)
-if (show_idle_balloon) {
-    var vx, vy, vw, vh, dy, dh, bx, bw;
-    vx = view_xview[0]; vy = view_yview[0];
-    vw = view_wview[0]; vh = view_hview[0];
+// -----------------------------
+// MENU DE OPCOES CENTRALIZADO
+// -----------------------------
+if (fase == 1) {
 
-    dh = 80; // Altura menor para o balão de aviso
-    dy = vy + vh - dh - 20;
+    var i;
+    var largura_caixa, altura_caixa;
+    var bx1, by1, bx2, by2;
+    var txt_op;
 
-    // --- Portrait Charlotte ---
-    if (string_pos("vc;", texto_balao) > 0) {
-        var px, h_p;
-        px = vx + 40;
-        h_p = sprite_get_height(spr_portrait_charlotte);
-        draw_sprite_ext(spr_portrait_charlotte, 0, px, dy - h_p + 10, 0.8, 0.8, 0, c_white, 1);
+    largura_caixa = 440;
+    altura_caixa = 24;
+
+    for (i = 0; i < ds_list_size(opcoes_da_vez); i += 1) {
+
+        bx1 = cx - (largura_caixa / 2);
+        by1 = cy - (ds_list_size(opcoes_da_vez) * altura_caixa / 2)
+              + (i * (altura_caixa + 6));
+        bx2 = bx1 + largura_caixa;
+        by2 = by1 + altura_caixa;
+
+        txt_op = ds_list_find_value(opcoes_da_vez, i);
+        txt_op = string_copy(
+            txt_op,
+            string_pos("|", txt_op) + 1,
+            string_length(txt_op)
+        );
+
+        if (
+            mouse_x > bx1 && mouse_x < bx2 &&
+            mouse_y > by1 && mouse_y < by2
+        ) {
+
+            draw_set_alpha(0.9);
+            draw_roundrect_color(
+                bx1, by1, bx2, by2,
+                cor_vidro, c_white, false
+            );
+
+            if (mouse_check_button_pressed(mb_left)) {
+                texto_escolhido = ds_list_find_value(opcoes_da_vez, i);
+                fase = 2;
+                caracteres = 0;
+            }
+
+        } else {
+
+            draw_set_alpha(0.6);
+            draw_roundrect_color(
+                bx1, by1, bx2, by2,
+                c_white, cor_vidro, false
+            );
+        }
+
+        draw_set_alpha(1);
+        draw_set_color(c_black);
+        draw_text_ext(
+            bx1 + 12,
+            by1 + 5,
+            txt_op,
+            16,
+            largura_caixa - 24
+        );
     }
 
-    // --- CAIXA FRUTIGER AERO GLASS ---
-    // Sombra suave
-    draw_set_alpha(0.3);
-    draw_roundrect_color(vx+30, dy+4, vx+vw-30, dy+dh+4, c_black, c_black, false);
+    // -----------------------------
+    // BARRA DE PACIENCIA (IGUAL FERGUS)
+    // -----------------------------
+    var bw;
+    bw = (1 - (timer_paciencia / tempo_limite)) * 440;
 
-    // Fundo Vidro Azulado
-    draw_set_alpha(0.7);
-    draw_roundrect_color(vx+30, dy, vx+vw-30, dy+dh, cor_vidro, c_white, false);
-
-    // Brilho Glossy Superior (O toque Frutiger Aero)
-    draw_set_alpha(0.4);
-    draw_ellipse_color(vx+60, dy+2, vx+vw-60, dy+dh/2, c_white, cor_vidro, false);
-
-    // Borda Branca Fina
-    draw_set_alpha(1);
     draw_set_color(c_white);
-    draw_roundrect(vx+30, dy, vx+vw-30, dy+dh, true);
-
-    // --- TEXTO DIGITADO ---
-    draw_set_color(c_black);
-    draw_set_font(-1); // Use sua fonte de diálogo aqui
-
-    var t_exibir;
-    t_exibir = string_replace(texto_balao, "vc;", "");
-
-    // Desenha apenas os caracteres processados no Step
-    draw_text_ext(vx+120, dy+25, string_copy(t_exibir, 1, caracteres), 18, vw-180);
+    draw_rectangle(
+        cx - 220,
+        cy + (ds_list_size(opcoes_da_vez) * altura_caixa / 2) + 18,
+        (cx - 220) + bw,
+        cy + (ds_list_size(opcoes_da_vez) * altura_caixa / 2) + 24,
+        false
+    );
 }
+
+draw_set_alpha(1);

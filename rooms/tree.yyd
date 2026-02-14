@@ -37,15 +37,15 @@
 		|Charlotte_APT
 	+Fergus Industries
 		|Fergus_Interior
-		|Rosa_Dialogue
 		|Osaka_Dialogue
-		|Fergus_Dialogue
 		|Fergus_corredor_2
 		|Fergus_corredor_3
 		|Fergus_corredor_1
 		|Fergus_Basket
 		|Fergus_chemistry_room
 		|Fergus
+		|Fergus_Dialogue
+		|Rosa_Dialogue
 +Magvel
 	|magvel2
 	+monte silesia
@@ -67,6 +67,7 @@
 	|MINEFOOD_POS
 +Teleporto Jolyne Kujo
 	|TP_JOLYNE_KUJO
+	|Teleport_Jolyne_Kujo_control_room
 +wii u
 	|Wii_U_MENU_room
 	|TV_SCREEN_ROOM
