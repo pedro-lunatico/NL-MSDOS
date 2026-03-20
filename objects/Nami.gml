@@ -12,7 +12,7 @@ state = 0; // 0:Trabalho, 3:Descanso, 5:Rebelião, 6:morta
 // Removi o target_obj = all (isso causava bugs de colisão)
 target_obj = noone;
 cleaning_timer = 0;
-work_speed = 1.2;
+work_speed = 3.2;
 y_base = y; // Usado para a animação de limpeza sem teleportar
 
 // --- Sistema Social ---
@@ -187,7 +187,7 @@ if (state == 0 || state == 3) {
             // INFLUÊNCIA PARA DESCANSAR: Vê a irmã a conversar e junta-se
             if (state == 0 && irma_proxima.state == 3 && random(100) < 25) {
                 state = 3;
-                timer_estado = 300 + random(200);
+                timer_estado = 550 + random(200);
                 cleaning_timer = 0;
             }
             // INFLUÊNCIA PARA TRABALHAR: Vê a irmã a limpar e volta ao serviço por medo
@@ -261,7 +261,7 @@ switch (state) {
                 speed = 0;
                 player.health -= 0.4;
                 if (timer_balao <= 0) {
-                    texto_balao = choose("UNIDAS SOMOS FORTES!", "CORTEM A GEOGRAFIA DELA!", "POR NORDION!");
+                    texto_balao = choose("UNIDAS SOMOS FORTES!", "CORTEM A GEOGRAFIA DELA!", "POR COSMO LAND!!!!");
                     timer_balao = 90;
                 }
             }
@@ -290,8 +290,8 @@ if (speed > 0) {
     sprite_index = Nami_Moving; // Altera para sprite de andar
     image_speed = 0.2;
     // Vira o sprite conforme a direcção (Hspeed positivo = direita, negativo = esquerda)
-    if (hspeed > 0) image_xscale = 1;
-    if (hspeed < 0) image_xscale = -1;
+    if (hspeed > 0) image_xscale = -1;
+    if (hspeed < 0) image_xscale = 1;
 }
 // Se estiver parada
 else {
