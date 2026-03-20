@@ -119,6 +119,7 @@
 	|Cavalier
 	|Cavalier2
 	|Pump_Jack_spr
+	|revolution_back3D
 +aviao
 	|aviao_Spr
 	|aviao_pousado_spr
@@ -131,6 +132,7 @@
 	|Ghost_Nimbus_CG
 	|Kent_CG
 	|Heath_CG
+	|foraver_young_CG
 +main menu
 	|aero_botton_template
 	|Credits_spr

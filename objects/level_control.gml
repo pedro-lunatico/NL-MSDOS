@@ -19,39 +19,33 @@ lib_id=1
 action_id=603
 applies_to=self
 */
-/// Lógica de Level Up
+/// Lógica de Level Up (Atualizada)
 
-// Ganha 1 XP ao apertar botão direito
-if (instance_exists(player) && mouse_check_button_pressed(mb_right)) {
-    global.xp += 1;
+// O XP agora é gerenciado pelas ações no mundo, não por cliques aleatórios.
+// Checa se subiu de nível
+if (global.xp >= global.xp_max) {
+    global.xp = 0;
+    global.nivel += 1;
+    global.xp_max += 15; // Aumenta o custo conforme o nível cresce
+    global.show_levelup_timer = 90;
 
-    // Checa se subiu de nível
-    if (global.xp >= global.xp_max) {
-        global.xp = 0;
-        global.nivel += 1;
-        global.xp_max += 5; // Aumenta a dificuldade para o próximo nível
-        global.show_levelup_timer = 90; // 1,5s de mensagem (considerando 60fps)
-
-        // Som de Level Up
-        if (sound_exists(level_up_SFX)) {
-            sound_play(level_up_SFX);
-        }
+    if (sound_exists(level_up_SFX)) {
+        sound_play(level_up_SFX);
     }
 }
+
+// Impede que o XP fique negativo (caso as punições sejam muitas)
+if (global.xp < 0) global.xp = 0;
 
 // Gerencia o Timer e a Animação do Sprite
 if (global.show_levelup_timer > 0) {
     global.show_levelup_timer -= 1;
-
-    // Avança a animação do sprite se ele existir
     if (sprite_exists(spr_levelup)) {
-        image_index += 0.5; // Ajuste a velocidade da animação aqui
-        if (image_index >= sprite_get_number(spr_levelup)) {
-            image_index = 0; // Reseta o loop da animação enquanto o timer durar
-        }
+        image_index += 0.5;
+        if (image_index >= sprite_get_number(spr_levelup)) image_index = 0;
     }
 } else {
-    image_index = 0; // Garante que o sprite comece do zero no próximo level up
+    image_index = 0;
 }
 #define Keyboard_84
 /*"/*'/**//* YYD ACTION

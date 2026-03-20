@@ -4,9 +4,23 @@ lib_id=1
 action_id=603
 applies_to=self
 */
+// Garante que o cavalo nasça em cima do player, se ele existir
+if (instance_exists(player)) {
+    x = player.x;
+    y = player.y;
+}
+/*"/*'/**//* YYD ACTION
+lib_id=1
+action_id=603
+applies_to=self
+*/
 /// tick
 globalvar moneytime, moneyplus, tick;
 health = 100;
+global.montado = false;
+dist_cavalo = 0;
+
+global.humanidade = 0
 /*"/*'/**//* YYD ACTION
 lib_id=1
 action_id=603
@@ -151,9 +165,39 @@ lib_id=1
 action_id=603
 applies_to=self
 */
-/// tick++
+/// Lógica de Montaria (Correção de Variável)
 
-global.tick = global.tick + 1
+// 1. Inicializa a lista se ela não existir
+if (!variable_global_exists("proibidas")) {
+    global.proibidas = ds_list_create();
+    ds_list_add(global.proibidas, monte_silesia);
+    ds_list_add(global.proibidas, monte_silesia2);
+    ds_list_add(global.proibidas, monte_silesia_RVL);
+}
+
+// 2. Tentar montar (Checagem segura)
+if (instance_exists(Cavalo)) {
+    // Só declaramos e calculamos a distância se o cavalo existir!
+    var dist_cavalo;
+    dist_cavalo = point_distance(x, y, Cavalo.x, Cavalo.y);
+
+    // Agora o if está seguro dentro do bloco instance_exists
+    if (dist_cavalo < 60 && mouse_check_button_pressed(mb_left)) {
+
+         // Verifica se a sala permite
+// Se estiver montado, sai do script e não processa nada!
+if (visible == false or (variable_global_exists("montado") && global.montado == true)) {
+    visible = false; // Garante invisibilidade
+    exit;
+             with(Cavalo) {
+                 x = -1000;
+                 y = -1000;
+             }
+         } else {
+             show_debug_message("Não posso montar aqui!");
+         }
+    }
+}
 /*"/*'/**//* YYD ACTION
 lib_id=1
 action_id=603
@@ -408,6 +452,36 @@ file_text_close(f2);
 if (variable_global_exists("mensagens")) {
     ds_list_add(global.mensagens, "jogo salvo com sucesso!");
     global.dialogo_ativo = true;
+}
+#define Other_4
+/*"/*'/**//* YYD ACTION
+lib_id=1
+action_id=603
+applies_to=self
+*/
+/// Room Start - Sincronia Forçada
+if (variable_global_exists("montado")) {
+    if (global.montado == true) {
+
+        // Se o cavalo de controle não existe, cria ele EXATAMENTE onde o player está
+        if (!instance_exists(Player_Horse)) {
+            var inst;
+            inst = instance_create(x, y, Player_Horse);
+
+            // Força o cavalo a herdar as coordenadas de teletransporte do player
+            inst.x = x;
+            inst.y = y;
+        }
+
+        // Esconde o player humano IMEDIATAMENTE
+        visible = false;
+        moving = false;
+
+        // Se houver um cavalo estático de cenário, remove ele
+        if (instance_exists(Cavalo)) {
+            with(Cavalo) { instance_destroy(); }
+        }
+    }
 }
 #define Trigger_Morri!
 /*"/*'/**//* YYD ACTION

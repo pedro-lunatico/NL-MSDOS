@@ -17,7 +17,7 @@ action_id=119
 applies_to=self
 invert=0
 arg0=Fantasma_Nimbus_Path
-arg1=12
+arg1=10
 arg2=0
 arg3=0
 */
