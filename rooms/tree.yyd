@@ -47,15 +47,16 @@
 		|Fergus_Dialogue
 		|Rosa_Dialogue
 +Magvel
-	|magvel2
 	+monte silesia
 		|monte_silesia2
-		|monte_silesia
 		|Familia_de_Lorca_Dialogue
 		|Kent_Dialogue_Room
 		|Heath_Dialogue_Room
 		|Ghost_Nimbus_Dialogue_Room
 		|monte_silesia_RVL
+		|monte_silesia
+		|Foraver_young_Room_2
+		|Foraver_young_Room_1
 	|magvel1
 +PC
 	|UtauOS_Desktop(Alpha)

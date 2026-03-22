@@ -22,7 +22,14 @@ falas = ds_list_create();
 ds_list_add(falas, "vc; eu vim te desafiar");
 ds_list_add(falas, "RVL; Charlotte... voce nao e boa no drift");
 ds_list_add(falas, "vc; vai aceitar ou nao?");
-ds_list_add(falas, "RVL; nao diga que eu nao avisei");
+ds_list_add(falas, "RVL;ok.... mas por favor nao caia do cavalo");
+ds_list_add(falas, "RVL;voce tem um rosto bonito demais se machucar");
+ds_list_add(falas, "vc; Revolution eu e voce somos geneticamente iguais");
+ds_list_add(falas, "RVL;poxa ksksks nao pode elogiar?");
+ds_list_add(falas, "vc; olha se vai me elogiar elogia meu corpo meu cabelo");
+ds_list_add(falas, "vc; agora elogiar a minha unida parte que eu esta estragada e complicado");
+ds_list_add(falas, "RVL;poxa ksksks entao voce e das dificeis eu vou mostrar o estilo art of weather
+e por isso comece na frente voce vai precisar");
 
 // Pausa gameplay
 global.dialogo_ativo = true;

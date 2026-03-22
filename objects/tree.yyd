@@ -72,7 +72,6 @@
 		|hit_box_EVA_EMBLEM
 	|Teleport
 	|Click
-	|Nami
 	+PC
 		|Storage
 		|SairdoPC(Fergus)
@@ -184,6 +183,9 @@
 		|Chemistry_Manual_obj
 	|Dew_relationship
 	|dayNight_controller
+	+nami
+		|Nami
+		|Nami_limpar
 +Noobfield
 	|Colton
 	+Colton Dialogue
@@ -227,10 +229,14 @@
 		|Cavalier_OBJ2
 		|ponto_de_corrida
 		|chegada
+		|Chegada_RVL
+		|silesia_pseudo3Dtest
 		|Ghost_Nimbus_Boss
 		|Ghost_Nimbus_Dialogue
 		|Kent_Dialogue
 		|Heath_Dialogue
+		|Foraver_young_OBJ1
+		|Foraver_young_OBJ2
 		|Speed_Radar_Silesia
 	|Pump_Jack
 |furniture

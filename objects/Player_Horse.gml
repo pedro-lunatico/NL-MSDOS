@@ -4,63 +4,93 @@ lib_id=1
 action_id=603
 applies_to=self
 */
-// --- MOVIMENTO E VELOCIDADE ---
+// --- MOVIMENTO BÁSICO ---
 hsp = 0;
 vsp = 0;
-move_speed = 10;      // <--- O ERRO FOI AQUI, AGORA ESTÁ DEFINIDA
-boost_speed = 18;
+move_speed = 8;
+boost_speed = 14;
 facing = 1;
-solido = colizao;    // Nome do objeto de parede
+solido = colizao; // Certifique-se que o objeto de parede tem esse nome
 
-// --- DRIFT / BOOST ---
+// --- SISTEMA DE DRIFT (POWER SLIDE) ---
 drift_key = vk_space;
 is_drifting = false;
-drift_meter = 0;
-drift_max = 85;
-boost_timer = 0;
+drift_timer = 0;      // Acumula para o boost (como no vídeo)
+boost_timer = 0;      // Tempo de duração do turbo
+drift_power = 0.25;   // O quanto ele "escorrega" lateralmente
 
-// --- ANIMAÇÃO ---
+// --- ANIMAÇÃO E VISUAL ---
 sprite_idle = ply_Horse_Idle;
 sprite_run  = ply_Horse;
 image_speed = 0.2;
 
-// --- SISTEMA DE DIÁLOGO / BALÃO AERO ---
+// --- SISTEMA DE DIÁLOGO (BALÃO) ---
 idle_timer = 0;
 idle_limit = room_speed * 5;
 show_idle_balloon = false;
-caracteres = 0;
-contador = 0;
-velocidade = 2; // Velocidade do texto
-texto_balao = "";
-
-cor_vidro = make_color_rgb(150, 220, 255);
+msg_balao = "vc; vai vai anda";
 #define Step_0
 /*"/*'/**//* YYD ACTION
 lib_id=1
 action_id=603
 applies_to=self
 */
-// 1. INPUTS
-var _key_left, _key_right, _key_up, _key_down;
-_key_left  = keyboard_check(vk_left);
-_key_right = keyboard_check(vk_right);
-_key_up    = keyboard_check(vk_up);
-_key_down  = keyboard_check(vk_down);
+// ==========================================================
+// STEP EVENT COMPLETO - PLAYER_HORSE (GM 8.1)
+// ==========================================================
 
-// 2. CHECA INATIVIDADE (Para o Balão)
-if (keyboard_check(vk_anykey)) {
-    idle_timer = 0;
-    show_idle_balloon = false;
-} else {
-    idle_timer += 1;
-    if (idle_timer >= idle_limit) {
-        show_idle_balloon = true;
+// --- 1. SINCRONIZAR HITBOX (O player humano obedece ao cavalo) ---
+if (instance_exists(player)) {
+    player.x = x;
+    player.y = y;
+    player.visible = false; // Mantém invisível enquanto montado
+    player.moving = false;
+}
+
+// --- 2. LÓGICA DE DESMONTAR (CLIQUE DIREITO) ---
+if (mouse_check_button_pressed(mb_right)) {
+    // Verifica se a sala permite desmontar (não pode no Touge)
+    if (ds_list_find_index(global.proibidas, room) == -1) {
+
+        global.montado = false; // DESLIGA A FLAG DE MONTARIA
+
+        if (instance_exists(player)) {
+            player.visible = true; // FAZ O PLAYER SER VISTO NOVAMENTE
+            player.x = x;
+            player.y = y;
+        }
+
+        // Calcula posição para o Cavalo estático não sair da room
+        var _spX;
+        _spX = x + (48 * facing);
+        if (_spX < 32) _spX = 32;
+        if (_spX > room_width - 32) _spX = room_width - 32;
+
+        // Gerencia o objeto Cavalo estático no cenário
+        if (instance_exists(Cavalo)) {
+            Cavalo.x = _spX;
+            Cavalo.y = y;
+        } else {
+            instance_create(_spX, y, Cavalo);
+        }
+
+        instance_destroy(); // Destrói o cavalo de controle
+        exit;
     }
 }
 
-// 3. VELOCIDADE E ACELERAÇÃO
-// Se estiver no boost, a velocidade máxima aumenta
-var _max_vel;
+// --- 3. INPUTS (TECLADO) ---
+var _key_left, _key_right, _key_up, _key_down, _key_drift;
+_key_left  = keyboard_check(vk_left)  or keyboard_check(ord("A"));
+_key_right = keyboard_check(vk_right) or keyboard_check(ord("D"));
+_key_up    = keyboard_check(vk_up)    or keyboard_check(ord("W"));
+_key_down  = keyboard_check(vk_down)  or keyboard_check(ord("S"));
+_key_drift = keyboard_check(vk_space);
+
+// --- 4. FÍSICA DE DRIFT ARCADE ---
+var _max_vel, _accel, _fric;
+
+// Define velocidade máxima (Boost vs Normal)
 if (boost_timer > 0) {
     _max_vel = boost_speed;
     boost_timer -= 1;
@@ -68,63 +98,93 @@ if (boost_timer > 0) {
     _max_vel = move_speed;
 }
 
-// Cálculo de movimentação suave (evita trancos em pistas estreitas)
-if (_key_left)  { hsp -= 0.5; facing = -1; }
-if (_key_right) { hsp += 0.5; facing = 1;  }
-if (!_key_left && !_key_right) { hsp -= sign(hsp) * 0.4; if (abs(hsp) < 0.5) hsp = 0; }
+// Lógica de deslize (Drift)
+if (_key_drift && (abs(hsp) > 1 or abs(vsp) > 1)) {
+    is_drifting = true;
+    _accel = 0.3;
+    _fric = 0.08;
+    drift_timer += 1;
+    if (drift_timer > 60) drift_timer = 60;
+} else {
+    // Ao soltar o drift, aplica o Boost proporcional
+    if (is_drifting && drift_timer > 20) boost_timer = drift_timer * 2;
+    is_drifting = false;
+    drift_timer = 0;
+    _accel = 0.8;
+    _fric = 0.4;
+}
 
-if (_key_up)    { vsp -= 0.5; }
-if (_key_down)  { vsp += 0.5; }
-if (!_key_up && !_key_down) { vsp -= sign(vsp) * 0.4; if (abs(vsp) < 0.5) vsp = 0; }
+// Aplicar Movimento
+if (_key_left)  { hsp -= _accel; facing = -1; }
+if (_key_right) { hsp += _accel; facing = 1;  }
+if (_key_up)    { vsp -= _accel; }
+if (_key_down)  { vsp += _accel; }
 
-// Limita a velocidade máxima
-if (abs(hsp) > _max_vel) hsp = sign(hsp) * _max_vel;
-if (abs(vsp) > _max_vel) vsp = sign(vsp) * _max_vel;
+// Fricção Manual (GM 8.1)
+if (!_key_left && !_key_right) {
+    if (abs(hsp) < _fric) hsp = 0; else hsp -= sign(hsp) * _fric;
+}
+if (!_key_up && !_key_down) {
+    if (abs(vsp) < _fric) vsp = 0; else vsp -= sign(vsp) * _fric;
+}
 
-// 4. COLISÃO SLIDE (O segredo para não enroscar)
-// Tenta mover no X
-if (place_meeting(x + hsp, y, solido)) {
-    while (!place_meeting(x + sign(hsp), y, solido)) { x += sign(hsp); }
-    hsp = 0;
+hsp = clamp(hsp, -_max_vel, _max_vel);
+vsp = clamp(vsp, -_max_vel, _max_vel);
+
+// --- 5. COLISÃO TOUGE (QUICAR + DESLIZAR) ---
+if (place_meeting(x + hsp, y, colizao)) {
+    if (is_drifting) drift_timer = 0;
+    if (abs(hsp) > 3) hsp = -hsp * 0.4;
+    else {
+        while (!place_meeting(x + sign(hsp), y, colizao)) { x += sign(hsp); }
+        hsp = 0;
+    }
 }
 x += hsp;
 
-// Tenta mover no Y
-if (place_meeting(x, y + vsp, solido)) {
-    while (!place_meeting(x, y + sign(vsp), solido)) { y += sign(vsp); }
-    vsp = 0;
+if (place_meeting(x, y + vsp, colizao)) {
+    if (is_drifting) drift_timer = 0;
+    if (abs(vsp) > 3) vsp = -vsp * 0.4;
+    else {
+        while (!place_meeting(x, y + sign(vsp), colizao)) { y += sign(vsp); }
+        vsp = 0;
+    }
 }
 y += vsp;
 
-// 5. LÓGICA DE DRIFT
-if (keyboard_check(drift_key) && (hsp != 0 || vsp != 0)) {
-    is_drifting = true;
-    drift_meter += 1;
-    if (drift_meter > drift_max) drift_meter = drift_max;
-} else {
-    if (is_drifting && drift_meter > 20) {
-        boost_timer = drift_meter; // Ativa o boost proporcional ao drift
-    }
-    is_drifting = false;
-    drift_meter = 0;
+// --- 6. EFEITOS DE PARTÍCULAS ---
+if (is_drifting && (global.tick mod 4 == 0)) {
+    effect_create_below(ef_smoke, x, y + 16, 0, c_white);
 }
 
-// 6. ANIMAÇÃO
-if (hsp != 0 || vsp != 0) {
+// --- 7. LIMITES DA ROOM E ANIMAÇÃO ---
+x = clamp(x, 16, room_width - 16);
+y = clamp(y, 16, room_height - 16);
+
+image_xscale = facing;
+
+if (abs(hsp) > 0.5 or abs(vsp) > 0.5) {
     sprite_index = sprite_run;
-    if (boost_timer > 0) image_speed = 0.5; else image_speed = 0.3;
+    if (boost_timer > 0) image_speed = 0.6; else image_speed = 0.3;
 } else {
     sprite_index = sprite_idle;
     image_speed = 0.1;
 }
 
-image_xscale = facing;
-
-// Inclinação no Drift
-if (is_drifting) {
-    image_angle = facing * -10;
-} else {
-    image_angle = 0;
+// Inclinação Visual (Suavização Manual)
+var _target_angle;
+if (is_drifting) _target_angle = facing * -20; else _target_angle = 0;
+image_angle += (_target_angle - image_angle) * 0.1;
+#define Other_4
+/*"/*'/**//* YYD ACTION
+lib_id=1
+action_id=603
+applies_to=self
+*/
+// Ao mudar de sala, garante que o cavalo alinhe com o player hitbox
+if (instance_exists(player)) {
+    x = player.x;
+    y = player.y;
 }
 #define Draw_0
 /*"/*'/**//* YYD ACTION
@@ -132,45 +192,47 @@ lib_id=1
 action_id=603
 applies_to=self
 */
-// Desenha o cavalo (Lorca/Fir)
+// Desenha o Cavalo
 draw_self();
 
-// HUD de Drift (Apenas se estiver carregando)
-if (drift_meter > 0) {
-    draw_set_color(c_yellow);
-    draw_rectangle(x - 20, y - 45, x - 20 + (drift_meter/drift_max)*40, y - 40, false);
+// HUD de Carga do Drift (Barra amarela igual a jogos arcade)
+if (is_drifting && drift_timer > 5) {
     draw_set_color(c_black);
-    draw_rectangle(x - 20, y - 45, x + 20, y - 40, true);
+    draw_rectangle(x-21, y-46, x+21, y-39, false); // Borda
+    draw_set_color(c_yellow);
+    draw_rectangle(x-20, y-45, x-20 + (drift_timer/60)*40, y-40, false); // Barra
 }
 
-// ---------------------------
-// BALÃO DE AVISO (Ajustado para GM8.1)
+// Efeito Visual de Boost (Fumaça/Rastro simples)
+if (boost_timer > 0) {
+    draw_set_blend_mode(bm_add);
+    draw_sprite_ext(sprite_index, image_index, x, y, image_xscale*1.1, 1.1, image_angle, c_orange, 0.3);
+    draw_set_blend_mode(bm_normal);
+}
+
+// BALÃO DE AVISO (Ajustado para as Views do GM8.1)
 if (show_idle_balloon) {
-    var bx, by, bw, bh, msg;
-    msg = "vc; vai vai anda";
+    var bx, by, bw, bh;
+    draw_set_font(-1); // Usa fonte padrão
 
-    // Posição baseada na View atual
+    // Posição na parte inferior da tela
     bx = view_xview[0] + view_wview[0]/2;
-    by = view_yview[0] + view_hview[0] - 80;
+    by = view_yview[0] + view_hview[0] - 60;
 
-    bw = string_width(msg) + 20;
+    bw = string_width(msg_balao) + 20;
     bh = 30;
 
-    // Sombra/Borda do balão
     draw_set_color(c_black);
-    draw_roundrect(bx - bw/2 - 2, by - bh/2 - 2, bx + bw/2 + 2, by + bh/2 + 2, false);
-
-    // Fundo do balão
+    draw_roundrect(bx-bw/2-2, by-bh/2-2, bx+bw/2+2, by+bh/2+2, false);
     draw_set_color(c_white);
-    draw_roundrect(bx - bw/2, by - bh/2, bx + bw/2, by + bh/2, false);
+    draw_roundrect(bx-bw/2, by-bh/2, bx+bw/2, by+bh/2, false);
 
-    // Texto
     draw_set_halign(fa_center);
     draw_set_valign(fa_middle);
     draw_set_color(c_black);
-    draw_text(bx, by, msg);
+    draw_text(bx, by, msg_balao);
 
-    // Reset dos alinhamentos para não quebrar outros textos do jogo
+    // Reset para não afetar outros draws
     draw_set_halign(fa_left);
     draw_set_valign(fa_top);
 }
