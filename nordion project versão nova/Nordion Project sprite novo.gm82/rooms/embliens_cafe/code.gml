@@ -1,0 +1,1 @@
+sound_loop(emblien_cafe_bgm)

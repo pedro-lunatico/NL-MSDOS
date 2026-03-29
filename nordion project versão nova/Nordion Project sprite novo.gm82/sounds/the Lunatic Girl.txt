@@ -1,0 +1,8 @@
+extension=.mid
+exists=1
+source=G:\gamemaker\Nordion Lands The MSDos\Nordion Project 13139.gmx\\\sound\audio\the Lunatic Girl.mid
+kind=1
+effects=17
+volume=0.85
+pan=0
+preload=1

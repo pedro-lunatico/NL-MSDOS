@@ -1,0 +1,5 @@
+splash_set_border(false)
+splash_set_close_button(false)
+splash_set_interrupt(true)
+splash_set_main(true)
+splash_show_video(temp_directory+"\startup.wmv",false)

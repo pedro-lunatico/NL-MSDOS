@@ -1,0 +1,6 @@
+store=1
+free=1
+overwrite=1
+remove=1
+export=3
+export_folder=GameData

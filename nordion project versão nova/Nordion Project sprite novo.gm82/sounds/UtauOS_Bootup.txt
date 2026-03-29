@@ -1,0 +1,8 @@
+extension=.mp3
+exists=1
+source=G:\gamemaker\Nordion Lands The MSDos\Nordion Project 13139.gmx\\\sound\audio\UtauOS_Bootup.mp3
+kind=3
+effects=0
+volume=1
+pan=0
+preload=1

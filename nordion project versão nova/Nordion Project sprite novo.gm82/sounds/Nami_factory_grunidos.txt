@@ -1,0 +1,8 @@
+extension=.wav
+exists=1
+source=Nami Grunidos.wav
+kind=0
+effects=28
+volume=0.86
+pan=1
+preload=1

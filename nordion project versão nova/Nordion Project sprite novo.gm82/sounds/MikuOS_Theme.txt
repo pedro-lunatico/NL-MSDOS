@@ -1,0 +1,8 @@
+extension=.mid
+exists=1
+source=BeepBox-Song (1).mid
+kind=1
+effects=8
+volume=0.82
+pan=0
+preload=1
