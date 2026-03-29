@@ -1,3 +1,4 @@
+var left, right, obj, t;
 left = argument1;
 right = argument2;
 obj = argument0;
